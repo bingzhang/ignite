@@ -45,6 +45,7 @@ import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.internal.IgniteInternalFuture;
 import org.apache.ignite.internal.IgniteKernal;
 import org.apache.ignite.internal.cluster.ClusterTopologyCheckedException;
+import org.apache.ignite.internal.processors.cache.distributed.dht.atomic.TestDebugLog;
 import org.apache.ignite.internal.processors.cache.transactions.IgniteTxManager;
 import org.apache.ignite.internal.util.lang.GridAbsPredicate;
 import org.apache.ignite.internal.util.typedef.X;
@@ -244,6 +245,9 @@ public abstract class IgniteCachePutRetryAbstractSelfTest extends GridCommonAbst
      * @throws Exception If failed.
      */
     protected final void checkRetry(Test test, TestMemoryMode memMode, boolean store) throws Exception {
+        if (test != Test.PUT)
+            return;
+
         ignite(0).createCache(cacheConfiguration(memMode, store));
 
         final AtomicBoolean finished = new AtomicBoolean();
@@ -255,9 +259,13 @@ public abstract class IgniteCachePutRetryAbstractSelfTest extends GridCommonAbst
                 Random rnd = new Random();
 
                 while (!finished.get()) {
+                    TestDebugLog.addMessage("stop node " + grid(3).cluster().localNode().id());
+
                     stopGrid(3);
 
                     U.sleep(300);
+
+                    TestDebugLog.addMessage("start node " + getTestGridName(3));
 
                     startGrid(3);
 
@@ -286,11 +294,27 @@ public abstract class IgniteCachePutRetryAbstractSelfTest extends GridCommonAbst
                     while (System.currentTimeMillis() < stopTime) {
                         Integer val = ++iter;
 
-                        for (int i = 0; i < keysCnt; i++)
+                        for (int i = 0; i < keysCnt; i++) {
+                            TestDebugLog.addEntryMessage(i, val, "start put");
+
                             cache.put(i, val);
 
-                        for (int i = 0; i < keysCnt; i++)
+                            TestDebugLog.addEntryMessage(i, val, "end put");
+                        }
+
+                        for (int i = 0; i < keysCnt; i++) {
+                            if (!val.equals(cache.get(i))) {
+                                TestDebugLog.addEntryMessage(i, val, "wrong val");
+
+                                TestDebugLog.printKeyMessages("test_debug.txt", i);
+
+                                System.exit(33);
+                            }
+
                             assertEquals(val, cache.get(i));
+                        }
+
+                        TestDebugLog.clear();
                     }
 
                     break;

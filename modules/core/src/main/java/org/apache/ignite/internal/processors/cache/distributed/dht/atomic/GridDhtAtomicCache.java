@@ -1727,6 +1727,8 @@ public class GridDhtAtomicCache<K, V> extends GridDhtCacheAdapter<K, V> {
         GridNearAtomicAbstractUpdateRequest req,
         UpdateReplyClosure completionCb
     ) {
+        TestDebugLog.addKeyMessage(req.key(0), req.topologyVersion(), "req, on primary");
+
         ClusterNode node = ctx.discovery().node(nodeId);
 
         if (node == null) {
@@ -1906,6 +1908,8 @@ public class GridDhtAtomicCache<K, V> extends GridDhtCacheAdapter<K, V> {
         }
 
         if (remap) {
+            TestDebugLog.addKeyMessage(req.key(0), res.remapTopologyVersion(), "primary, need remap");
+
             assert dhtFut == null;
 
             completionCb.apply(req, res);
@@ -3084,6 +3088,8 @@ public class GridDhtAtomicCache<K, V> extends GridDhtCacheAdapter<K, V> {
             nodeId,
             checkReq.futureId(),
             false);
+
+        res.partition(checkReq.partition());
 
         GridCacheReturn ret = new GridCacheReturn(false, true);
 

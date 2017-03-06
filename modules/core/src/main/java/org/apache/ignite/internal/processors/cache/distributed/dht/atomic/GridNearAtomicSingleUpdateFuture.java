@@ -148,6 +148,8 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
             if (reqState.req.nodeId.equals(nodeId)) {
                 GridNearAtomicAbstractUpdateRequest req = reqState.processPrimaryResponse(nodeId);
 
+                TestDebugLog.addEntryMessage(key, nodeId, "node left, primary");
+
                 if (req != null) {
                     GridNearAtomicUpdateResponse res = primaryFailedResponse(req);
 
@@ -160,6 +162,8 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
             }
             else {
                 DhtLeftResult res = reqState.onDhtNodeLeft(nodeId);
+
+                TestDebugLog.addEntryMessage(key, res, "node left, dht check");
 
                 if (res == DhtLeftResult.DONE)
                     rcvAll = true;
@@ -200,6 +204,8 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
         if (super.onDone(retval, err)) {
             Long futVer = onFutureDone();
 
+            TestDebugLog.addEntryMessage(key, futVer, "fut done");
+
             if (futVer != null)
                 cctx.mvcc().removeAtomicFuture(futVer);
 
@@ -225,6 +231,8 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
             if (opRes == null && res.hasResult())
                 opRes = res.result();
 
+            TestDebugLog.addEntryMessage(key, nodeId, "dht res");
+
             if (reqState.onDhtResponse(nodeId, res)) {
                 opRes0 = opRes;
                 err0 = err;
@@ -248,7 +256,6 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
     }
 
     /** {@inheritDoc} */
-    @SuppressWarnings({"unchecked", "ThrowableResultOfMethodCallIgnored"})
     @Override public void onPrimaryResponse(UUID nodeId, GridNearAtomicUpdateResponse res, boolean nodeErr) {
         GridNearAtomicAbstractUpdateRequest req;
 
@@ -269,6 +276,8 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
             boolean remapKey = res.remapTopologyVersion() != null;
 
             if (remapKey) {
+                TestDebugLog.addEntryMessage(key, nodeId, "remap " + res.remapTopologyVersion());
+
                 assert !req.topologyVersion().equals(res.remapTopologyVersion());
 
                 assert remapTopVer == null : remapTopVer;
@@ -297,6 +306,8 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
 
                 assert reqState != null;
 
+                TestDebugLog.addEntryMessage(key, nodeId, "primary res");
+
                 if (!reqState.onPrimaryResponse(res, cctx))
                     return;
             }
@@ -315,14 +326,14 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
             return;
         }
 
-        if (nearEnabled && !nodeErr)
-            updateNear(req, res);
-
         if (remapTopVer0 != null) {
             waitAndRemap(remapTopVer0);
 
             return;
         }
+
+        if (nearEnabled && !nodeErr)
+            updateNear(req, res);
 
         onDone(opRes0, err0);
     }
@@ -356,6 +367,8 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
             remapTopVer0 = remapTopVer;
 
         if (remapTopVer0 != null) {
+            TestDebugLog.addEntryMessage(key, remapTopVer0, "all rcvd, remap");
+
             cctx.mvcc().removeAtomicFuture(futId);
 
             reqState = null;
@@ -609,6 +622,8 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
         ClusterNode primary = nodes.get(0);
 
         boolean needPrimaryRes = !mappingKnown || primary.isLocal() || nodes.size() == 1;
+
+        TestDebugLog.addEntryMessage(key, primary.id(), "mapped");
 
         GridNearAtomicAbstractUpdateRequest req;
 

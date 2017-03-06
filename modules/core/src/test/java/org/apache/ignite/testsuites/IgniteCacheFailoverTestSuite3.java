@@ -36,8 +36,8 @@ public class IgniteCacheFailoverTestSuite3 extends TestSuite {
 
         suite.addTestSuite(IgniteCachePutRetryAtomicSelfTest.class);
         suite.addTestSuite(IgniteCachePutRetryAtomicPrimaryWriteOrderSelfTest.class);
-        suite.addTestSuite(IgniteCachePutRetryTransactionalSelfTest.class);
-        suite.addTestSuite(CacheGetInsideLockChangingTopologyTest.class);
+//        suite.addTestSuite(IgniteCachePutRetryTransactionalSelfTest.class);
+//        suite.addTestSuite(CacheGetInsideLockChangingTopologyTest.class);
 
         return suite;
     }

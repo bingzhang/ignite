@@ -214,6 +214,8 @@ public abstract class GridNearAtomicAbstractUpdateFuture extends GridFutureAdapt
 
     void sendCheckUpdateRequest(GridNearAtomicCheckUpdateRequest req) {
         try {
+            TestDebugLog.addEntryMessage(req.updateRequest().key(0), req.updateRequest().nodeId(), "send primary check");
+
             cctx.io().send(req.updateRequest().nodeId(), req, cctx.ioPolicy());
         }
         catch (ClusterTopologyCheckedException e) {
@@ -329,6 +331,8 @@ public abstract class GridNearAtomicAbstractUpdateFuture extends GridFutureAdapt
     public abstract void onDhtResponse(UUID nodeId, GridDhtAtomicNearResponse res);
 
     final void onPrimaryError(GridNearAtomicAbstractUpdateRequest req, GridNearAtomicUpdateResponse res) {
+        TestDebugLog.addEntryMessage(req.key(0), req.nodeId(), "primary err");
+
         assert res.error() != null;
 
         if (err == null)
@@ -476,6 +480,8 @@ public abstract class GridNearAtomicAbstractUpdateFuture extends GridFutureAdapt
                 UUID nodeId = it.next();
 
                 if (!cctx.discovery().alive(nodeId)) {
+                    TestDebugLog.addEntryMessage(req.key(0), nodeId, "check dht alive, found left");
+
                     it.remove();
 
                     if (finished()) {
