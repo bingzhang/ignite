@@ -120,7 +120,8 @@ class GridCachePutAllTask extends ComputeTaskAdapter<Collection<Integer>, Void> 
 
                             for (int i = 0; i < RETRIES; i++) {
                                 try {
-                                    cache.putAll(putMap);
+                                    for (Map.Entry<Integer, Integer> e : putMap.entrySet())
+                                        cache.put(e.getKey(), e.getValue());
 
                                     break;
                                 }
@@ -148,7 +149,8 @@ class GridCachePutAllTask extends ComputeTaskAdapter<Collection<Integer>, Void> 
 
                     for (int i = 0; i < RETRIES; i++) {
                         try {
-                            cache.putAll(putMap);
+                            for (Map.Entry<Integer, Integer> e : putMap.entrySet())
+                                cache.put(e.getKey(), e.getValue());
 
                             break;
                         }

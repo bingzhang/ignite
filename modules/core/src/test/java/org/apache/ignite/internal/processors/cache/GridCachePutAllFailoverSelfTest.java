@@ -46,6 +46,7 @@ import org.apache.ignite.configuration.DeploymentMode;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.configuration.NearCacheConfiguration;
 import org.apache.ignite.internal.IgniteKernal;
+import org.apache.ignite.internal.processors.cache.distributed.dht.atomic.TestDebugLog;
 import org.apache.ignite.internal.util.typedef.CI1;
 import org.apache.ignite.internal.util.typedef.F;
 import org.apache.ignite.internal.util.typedef.PN;
@@ -436,6 +437,12 @@ public class GridCachePutAllFailoverSelfTest extends GridCommonAbstractTest {
                             if (entry0 != null)
                                 info(" >>> " + entry);
                         }
+
+                        TestDebugLog.addEntryMessage(key, null, "absent key");
+
+                        TestDebugLog.printKeyMessages("test_debug.txt", key);
+
+                        System.exit(55);
                     }
 
                     info("");

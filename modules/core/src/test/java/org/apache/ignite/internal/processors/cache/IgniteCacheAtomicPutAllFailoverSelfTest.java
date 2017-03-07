@@ -34,4 +34,8 @@ public class IgniteCacheAtomicPutAllFailoverSelfTest extends GridCachePutAllFail
     @Override public void testPutAllFailoverColocatedNearEnabledTwoBackupsOffheapTieredSwap(){
         fail("https://issues.apache.org/jira/browse/IGNITE-1584");
     }
+
+    public void testPutAllFailoverNearDisabledThreeBackups() throws Exception {
+        super.testPutAllFailoverNearDisabledThreeBackups();
+    }
 }

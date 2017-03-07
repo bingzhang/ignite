@@ -64,6 +64,8 @@ import org.apache.ignite.internal.processors.cache.distributed.dht.GridDhtPartit
 import org.apache.ignite.internal.processors.cache.distributed.dht.GridDhtTopologyFuture;
 import org.apache.ignite.internal.processors.cache.distributed.dht.atomic.GridDhtAtomicAbstractUpdateFuture;
 import org.apache.ignite.internal.processors.cache.distributed.dht.atomic.GridDhtAtomicCache;
+import org.apache.ignite.internal.processors.cache.distributed.dht.atomic.GridNearAtomicSingleUpdateFuture;
+import org.apache.ignite.internal.processors.cache.distributed.dht.atomic.TestDebugLog;
 import org.apache.ignite.internal.processors.cache.distributed.dht.preloader.GridDhtPartitionDemandMessage;
 import org.apache.ignite.internal.processors.cache.distributed.dht.preloader.GridDhtPartitionExchangeId;
 import org.apache.ignite.internal.processors.cache.distributed.dht.preloader.GridDhtPartitionFullMap;
@@ -1424,6 +1426,14 @@ public class GridCachePartitionExchangeManager<K, V> extends GridCacheSharedMana
                         if (longRunningOpsDumpCnt < GridDhtPartitionsExchangeFuture.DUMP_PENDING_OBJECTS_THRESHOLD) {
                             U.warn(log, "Found long running cache future [startTime=" + formatTime(fut.startTime()) +
                                 ", curTime=" + formatTime(curTime) + ", fut=" + fut + ']');
+
+                            if (fut instanceof GridNearAtomicSingleUpdateFuture) {
+                                TestDebugLog.addEntryMessage(((GridNearAtomicSingleUpdateFuture) fut).key(), null, "hang fut");
+
+                                TestDebugLog.printKeyMessages("test_debug.txt", ((GridNearAtomicSingleUpdateFuture) fut).key());
+
+                                System.exit(44);
+                            }
                         }
                         else
                             break;

@@ -124,6 +124,10 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
         this.val = val;
     }
 
+    public Object key() {
+        return key;
+    }
+
     /** {@inheritDoc} */
     @Override public Long id() {
         synchronized (mux) {
