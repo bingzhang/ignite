@@ -338,6 +338,9 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
         onDone(opRes0, err0);
     }
 
+    /**
+     * @return Non-null topology version if update should be remapped.
+     */
     private AffinityTopologyVersion onAllReceived() {
         assert futId != null;
 
@@ -381,6 +384,9 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
         return remapTopVer0;
     }
 
+    /**
+     * @param remapTopVer New topology version.
+     */
     private void waitAndRemap(AffinityTopologyVersion remapTopVer) {
         if (!waitTopFut) {
             onDone(new GridCacheTryPutFailedException());

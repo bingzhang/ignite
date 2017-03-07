@@ -35,6 +35,7 @@ public class GridNearAtomicCheckUpdateRequest extends GridCacheMessage {
     /** Cache message index. */
     public static final int CACHE_MSG_IDX = nextIndexId();
 
+    /** */
     @GridDirectTransient
     private GridNearAtomicAbstractUpdateRequest updateReq;
 

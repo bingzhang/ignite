@@ -3095,12 +3095,7 @@ public class GridDhtAtomicCache<K, V> extends GridDhtCacheAdapter<K, V> {
 
         res.returnValue(ret);
 
-        try {
-            ctx.io().send(nodeId, res, ctx.ioPolicy());
-        }
-        catch (IgniteCheckedException e) {
-            e.printStackTrace();
-        }
+        sendNearUpdateReply(nodeId, res);
     }
 
     /**
