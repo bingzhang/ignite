@@ -150,7 +150,7 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
                 return false;
 
             if (reqState.req.nodeId.equals(nodeId)) {
-                GridNearAtomicAbstractUpdateRequest req = reqState.processPrimaryResponse(nodeId);
+                GridNearAtomicAbstractUpdateRequest req = reqState.onPrimaryFail();
 
                 TestDebugLog.addEntryMessage(key, nodeId, "node left, primary");
 
@@ -272,7 +272,7 @@ public class GridNearAtomicSingleUpdateFuture extends GridNearAtomicAbstractUpda
             if (futId == null || futId != res.futureId())
                 return;
 
-            req = reqState.processPrimaryResponse(nodeId);
+            req = reqState.processPrimaryResponse(nodeId, res);
 
             if (req == null)
                 return;

@@ -1716,6 +1716,8 @@ public class GridDhtAtomicCache<K, V> extends GridDhtCacheAdapter<K, V> {
         GridNearAtomicUpdateResponse res = new GridNearAtomicUpdateResponse(ctx.cacheId(),
             nodeId,
             req.futureId(),
+            req.partition(),
+            false,
             ctx.deploymentEnabled());
 
         res.addFailedKeys(req.keys(), e);
@@ -1746,10 +1748,12 @@ public class GridDhtAtomicCache<K, V> extends GridDhtCacheAdapter<K, V> {
             return;
         }
 
-        GridNearAtomicUpdateResponse res = new GridNearAtomicUpdateResponse(ctx.cacheId(), nodeId, req.futureId(),
+        GridNearAtomicUpdateResponse res = new GridNearAtomicUpdateResponse(ctx.cacheId(),
+            nodeId,
+            req.futureId(),
+            req.partition(),
+            false,
             ctx.deploymentEnabled());
-
-        res.partition(req.partition());
 
         assert !req.returnValue() || (req.operation() == TRANSFORM || req.size() == 1);
 
@@ -3095,9 +3099,9 @@ public class GridDhtAtomicCache<K, V> extends GridDhtCacheAdapter<K, V> {
         GridNearAtomicUpdateResponse res = new GridNearAtomicUpdateResponse(ctx.cacheId(),
             nodeId,
             checkReq.futureId(),
+            checkReq.partition(),
+            false,
             false);
-
-        res.partition(checkReq.partition());
 
         GridCacheReturn ret = new GridCacheReturn(false, true);
 
