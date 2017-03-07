@@ -648,6 +648,14 @@ public class GridDhtAtomicCache<K, V> extends GridDhtCacheAdapter<K, V> {
             true,
             false).get();
 
+        if (res == null) {
+            TestDebugLog.addEntryMessage(key, val, "null res");
+
+            TestDebugLog.printKeyMessages("test_debug.txt", key);
+
+            System.exit(33);
+        }
+
         assert res != null;
 
         return res;

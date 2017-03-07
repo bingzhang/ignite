@@ -244,6 +244,9 @@ public class GridCacheAtomicInvalidPartitionHandlingSelfTest extends GridCommonA
         this.writeSync = writeSync;
         this.memMode = memMode;
 
+        if (writeSync != FULL_SYNC)
+            return;
+
         final int gridCnt = 6;
 
         startGrids(gridCnt);
@@ -323,12 +326,16 @@ public class GridCacheAtomicInvalidPartitionHandlingSelfTest extends GridCommonA
                         try {
                             int cnt = rnd.nextInt(5);
 
-                            if (cnt < 2) {
+                            if (true || cnt < 2) {
                                 int key = rnd.nextInt(range);
 
                                 int val = rnd.nextInt();
 
+                                TestDebugLog.addEntryMessage(key, val, "start-put");
+
                                 cache.put(key, val);
+
+                                TestDebugLog.addEntryMessage(key, val, "put-done");
                             }
                             else {
                                 Map<Integer, Integer> upd = new TreeMap<>();
@@ -366,6 +373,8 @@ public class GridCacheAtomicInvalidPartitionHandlingSelfTest extends GridCommonA
             awaitPartitionMapExchange();
 
             fut.get();
+
+            TestDebugLog.clear();
 
             for (int k = 0; k < range; k++) {
                 Collection<ClusterNode> affNodes = affinity(cache).mapKeyToPrimaryAndBackups(k);
