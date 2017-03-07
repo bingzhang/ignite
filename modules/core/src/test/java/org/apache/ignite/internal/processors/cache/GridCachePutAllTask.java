@@ -35,6 +35,7 @@ import org.apache.ignite.compute.ComputeJobAdapter;
 import org.apache.ignite.compute.ComputeJobResult;
 import org.apache.ignite.compute.ComputeJobResultPolicy;
 import org.apache.ignite.compute.ComputeTaskAdapter;
+import org.apache.ignite.internal.processors.cache.distributed.dht.atomic.TestDebugLog;
 import org.apache.ignite.internal.util.typedef.F;
 import org.apache.ignite.internal.util.typedef.internal.U;
 import org.apache.ignite.lang.IgnitePredicate;
@@ -120,8 +121,13 @@ class GridCachePutAllTask extends ComputeTaskAdapter<Collection<Integer>, Void> 
 
                             for (int i = 0; i < RETRIES; i++) {
                                 try {
-                                    for (Map.Entry<Integer, Integer> e : putMap.entrySet())
+                                    for (Map.Entry<Integer, Integer> e : putMap.entrySet()) {
+                                        TestDebugLog.addEntryMessage(e.getKey(), e.getValue(), "start put");
+
                                         cache.put(e.getKey(), e.getValue());
+
+                                        TestDebugLog.addEntryMessage(e.getKey(), e.getValue(), "end put");
+                                    }
 
                                     break;
                                 }
@@ -149,8 +155,13 @@ class GridCachePutAllTask extends ComputeTaskAdapter<Collection<Integer>, Void> 
 
                     for (int i = 0; i < RETRIES; i++) {
                         try {
-                            for (Map.Entry<Integer, Integer> e : putMap.entrySet())
+                            for (Map.Entry<Integer, Integer> e : putMap.entrySet()) {
+                                TestDebugLog.addEntryMessage(e.getKey(), e.getValue(), "start put");
+
                                 cache.put(e.getKey(), e.getValue());
+
+                                TestDebugLog.addEntryMessage(e.getKey(), e.getValue(), "end put");
+                            }
 
                             break;
                         }

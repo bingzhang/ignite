@@ -440,7 +440,7 @@ public class GridCachePutAllFailoverSelfTest extends GridCommonAbstractTest {
 
                         TestDebugLog.addEntryMessage(key, null, "absent key");
 
-                        TestDebugLog.printKeyMessages("test_debug.txt", key);
+                        TestDebugLog.printKeyMessages(null, key);
 
                         System.exit(55);
                     }
@@ -651,6 +651,16 @@ public class GridCachePutAllFailoverSelfTest extends GridCommonAbstractTest {
             }
 
             info(">>> Absent keys: " + absentKeys);
+
+            if (!absentKeys.isEmpty()) {
+                for (Integer key : absentKeys) {
+                    TestDebugLog.addEntryMessage(key, null, "absent key");
+
+                    TestDebugLog.printKeyMessages(null, key);
+
+                    System.exit(55);
+                }
+            }
 
             assertTrue(absentKeys.isEmpty());
 
