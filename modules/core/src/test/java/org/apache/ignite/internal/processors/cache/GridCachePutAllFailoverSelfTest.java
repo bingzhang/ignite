@@ -89,7 +89,7 @@ public class GridCachePutAllFailoverSelfTest extends GridCommonAbstractTest {
     public static final int FAIL_ON_CHUNK_NO = (TEST_MAP_SIZE / DATA_CHUNK_SIZE) / 3;
 
     /** Await timeout in seconds. */
-    public static final int AWAIT_TIMEOUT_SEC = 65;
+    public static final int AWAIT_TIMEOUT_SEC = 3 * 65;
 
     /** */
     private static final int FAILOVER_PUSH_GAP = 30;
