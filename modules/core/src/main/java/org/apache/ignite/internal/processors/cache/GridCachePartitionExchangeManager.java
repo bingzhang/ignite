@@ -1430,7 +1430,7 @@ public class GridCachePartitionExchangeManager<K, V> extends GridCacheSharedMana
                             if (fut instanceof GridNearAtomicSingleUpdateFuture) {
                                 TestDebugLog.addEntryMessage(((GridNearAtomicSingleUpdateFuture) fut).key(), null, "hang fut");
 
-                                TestDebugLog.printKeyMessages("test_debug.txt", ((GridNearAtomicSingleUpdateFuture) fut).key());
+                                TestDebugLog.printKeyMessages(null, ((GridNearAtomicSingleUpdateFuture) fut).key());
 
                                 System.exit(44);
                             }
@@ -1447,6 +1447,14 @@ public class GridCachePartitionExchangeManager<K, V> extends GridCacheSharedMana
                         if (longRunningOpsDumpCnt < GridDhtPartitionsExchangeFuture.DUMP_PENDING_OBJECTS_THRESHOLD) {
                             U.warn(log, "Found long running cache future [startTime=" + formatTime(fut.startTime()) +
                                 ", curTime=" + formatTime(curTime) + ", fut=" + fut + ']');
+
+                            if (fut instanceof GridNearAtomicSingleUpdateFuture) {
+                                TestDebugLog.addEntryMessage(((GridNearAtomicSingleUpdateFuture) fut).key(), null, "hang fut");
+
+                                TestDebugLog.printKeyMessages(null, ((GridNearAtomicSingleUpdateFuture) fut).key());
+
+                                System.exit(44);
+                            }
                         }
                         else
                             break;

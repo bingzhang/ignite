@@ -122,11 +122,11 @@ class GridCachePutAllTask extends ComputeTaskAdapter<Collection<Integer>, Void> 
                             for (int i = 0; i < RETRIES; i++) {
                                 try {
                                     for (Map.Entry<Integer, Integer> e : putMap.entrySet()) {
-                                        TestDebugLog.addEntryMessage(e.getKey(), e.getValue(), "start put");
+                                        TestDebugLog.addEntryMessage(e.getKey(), ignite.name(), "start put");
 
                                         cache.put(e.getKey(), e.getValue());
 
-                                        TestDebugLog.addEntryMessage(e.getKey(), e.getValue(), "end put");
+                                        TestDebugLog.addEntryMessage(e.getKey(), ignite.name(), "end put");
                                     }
 
                                     break;
@@ -156,11 +156,11 @@ class GridCachePutAllTask extends ComputeTaskAdapter<Collection<Integer>, Void> 
                     for (int i = 0; i < RETRIES; i++) {
                         try {
                             for (Map.Entry<Integer, Integer> e : putMap.entrySet()) {
-                                TestDebugLog.addEntryMessage(e.getKey(), e.getValue(), "start put");
+                                TestDebugLog.addEntryMessage(e.getKey(), ignite.name(), "start put");
 
                                 cache.put(e.getKey(), e.getValue());
 
-                                TestDebugLog.addEntryMessage(e.getKey(), e.getValue(), "end put");
+                                TestDebugLog.addEntryMessage(e.getKey(), ignite.name(), "end put");
                             }
 
                             break;
